@@ -8,11 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.assignment4.R
-import com.example.assignment4.NetworkModule
+import com.example.assignment4.data.api.NetworkModule
+import com.example.assignment4.data.database.AppDatabase
+import com.example.assignment4.data.database.entity.toEntity
+import com.example.assignment4.data.database.entity.toMovie
+import com.example.assignment4.ui.adapter.MoviesAdapter
 import kotlinx.coroutines.launch
-
-
 
 class MoviesFragment : Fragment(R.layout.fragment_movies) {
 
@@ -54,14 +55,36 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
     }
 
     private fun loadMovies() {
+        val db = AppDatabase.getInstance(requireContext())
+        val dao = db.movieDao()
+
         viewLifecycleOwner.lifecycleScope.launch {
+            showLoading()
+
             try {
-                showLoading()
+                // Step 1: Try to load movies from the network
                 val response = NetworkModule.api.getPopularMovies()
-                adapter.submit(response.results)
+
+                // Step 2: Save network data to Room
+                val entities = response.results.map { it.toEntity() }
+                dao.clearAll() // Clear old data
+                dao.insertAll(entities) // Insert new data
+
+                // Step 3: Always load from Room as the source of truth
+                val cachedMovies = dao.getAll().map { it.toMovie() }
+                adapter.submit(cachedMovies)
                 showContent()
+
             } catch (e: Exception) {
-                showError("Failed to load: ${e.message}")
+                // Network failed, load from Room (cached data)
+                val cachedMovies = dao.getAll().map { it.toMovie() }
+
+                if (cachedMovies.isNotEmpty()) {
+                    adapter.submit(cachedMovies)
+                    showContent()
+                } else {
+                    showError("No internet and no cached data.")
+                }
             }
         }
     }

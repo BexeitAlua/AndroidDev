@@ -1,4 +1,4 @@
-package com.example.assignment4
+package com.example.assignment4.data.api
 
 import com.google.gson.annotations.SerializedName
 import retrofit2.http.GET

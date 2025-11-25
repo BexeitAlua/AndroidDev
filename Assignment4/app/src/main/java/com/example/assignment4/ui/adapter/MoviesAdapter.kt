@@ -1,4 +1,4 @@
-package com.example.assignment4
+package com.example.assignment4.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.assignment4.R
+import com.example.assignment4.data.api.Movie
 
 class MoviesAdapter(
     private val items: MutableList<Movie> = mutableListOf()

@@ -1,4 +1,4 @@
-package com.example.assignment4
+package com.example.assignment4.data.api
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

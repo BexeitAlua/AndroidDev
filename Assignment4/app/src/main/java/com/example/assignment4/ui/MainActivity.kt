@@ -1,8 +1,11 @@
-package com.example.assignment4
+package com.example.assignment4.ui
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.assignment4.MoviesFragment
+
+import com.example.assignment4.R
+
 
 class MainActivity: AppCompatActivity(R.layout.activity_main){
     override fun onCreate(savedInstanceState: Bundle?) {
