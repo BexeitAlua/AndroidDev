@@ -1,4 +1,4 @@
-package com.example.assignment4
+package com.example.assignment4.ui.home
 
 import android.os.Bundle
 import android.view.View
@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.assignment4.R
 import com.example.assignment4.data.api.NetworkModule
 import com.example.assignment4.data.database.AppDatabase
 import com.example.assignment4.data.database.entity.toEntity
@@ -62,21 +63,18 @@ class MoviesFragment : Fragment(R.layout.fragment_movies) {
             showLoading()
 
             try {
-                // Step 1: Try to load movies from the network
+
                 val response = NetworkModule.api.getPopularMovies()
 
-                // Step 2: Save network data to Room
                 val entities = response.results.map { it.toEntity() }
-                dao.clearAll() // Clear old data
-                dao.insertAll(entities) // Insert new data
+                dao.clearAll()
+                dao.insertAll(entities)
 
-                // Step 3: Always load from Room as the source of truth
                 val cachedMovies = dao.getAll().map { it.toMovie() }
                 adapter.submit(cachedMovies)
                 showContent()
 
             } catch (e: Exception) {
-                // Network failed, load from Room (cached data)
                 val cachedMovies = dao.getAll().map { it.toMovie() }
 
                 if (cachedMovies.isNotEmpty()) {

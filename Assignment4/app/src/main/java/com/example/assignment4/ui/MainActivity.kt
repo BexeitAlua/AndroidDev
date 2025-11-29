@@ -2,7 +2,7 @@ package com.example.assignment4.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.assignment4.MoviesFragment
+import com.example.assignment4.ui.home.MoviesFragment
 
 import com.example.assignment4.R
 
